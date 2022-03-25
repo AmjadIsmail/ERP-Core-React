@@ -1,0 +1,44 @@
+
+
+Select 
+ Asp.net core web application
+for new project
+name wiht Webapi
+
+	.choose API
+
+
+in startup classs
+configureServices
+
+.	enable cors
+
+add json serializer 
+
+install nuget 
+
+microsoft.sepnetcore.mvc.newtonsoftjson
+
+import namespace
+
+now run to test webapi
+
+now create model
+add dept model class
+add employee model class
+
+
+add db connection in app setting
+
+add api controller
+
+
+add nuget package
+
+sqlclient
+
+system.data.sqlclient
+
+
+install react router dom
+
