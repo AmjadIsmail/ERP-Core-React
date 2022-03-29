@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "99nLLK7PSLVlhhjCd1/84Dme788a5hF734bD81Q8TtsBtWXitFXrdXXXyCWn/1VnzHyNxzlmn7mDZPn0fcSbFw==",
+  "dgSpecHash": "ffTv77Z1V1P8wEx9eod2JmS+1UNOPIE4mR9E2JyUWo4Trtzy/Oa7zIQosYqKmo1EO6gbI3XOUGKVGT+7QcSIGg==",
   "success": true,
   "projectFilePath": "D:\\GIT-ERP\\ERP\\ERP.csproj",
   "expectedPackageFiles": [
@@ -17,8 +17,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\Amjad\\.nuget\\packages\\system.data.sqlclient\\4.8.2\\system.data.sqlclient.4.8.2.nupkg.sha512",
     "C:\\Users\\Amjad\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
-    "C:\\Users\\Amjad\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
-    "C:\\Users\\Amjad\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.23\\microsoft.netcore.app.host.win-x64.3.1.23.nupkg.sha512"
+    "C:\\Users\\Amjad\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
   ],
   "logs": []
 }
