@@ -1,21 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ERP.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using ERP.Models;
+
 namespace ERP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DesignationController : ControllerBase
+    public class LeaveClassController : ControllerBase
     {
+
         private readonly IConfiguration _configuration;
-        public DesignationController(IConfiguration configuration)
+        public LeaveClassController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -23,8 +22,8 @@ namespace ERP.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            //  string query = @"select DesigId, Designation from dbo.Designation";
-            string query = "sp_getDesignation";
+            // string query = @"select LeaveClassID, LeaveClass from dbo.tblLeaveClass";
+            string query = @"sp_getLeaveClass";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -33,7 +32,7 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.CommandType = CommandType.StoredProcedure;                    
+                    myCommand.CommandType = CommandType.StoredProcedure;
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
 
@@ -44,12 +43,13 @@ namespace ERP.Controllers
 
             return new JsonResult(table);
         }
+       
 
         [HttpPost]
-        public JsonResult Post(Designation dep)
+        public JsonResult Post(LeaveClass leave )
         {
-           // string query = @"insert into dbo.Designation (Designation) values ('" + dep.Designation1 + @"')";
-            string query = "sp_postDesignation";
+            //string query = @"insert into dbo.Departments (DeptName) values ('" + dep.DeptName + @"')";
+            string query = @"sp_postLeaveClass";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -59,7 +59,7 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@designation1", dep.Designation1);
+                    myCommand.Parameters.AddWithValue("@LeaveClassName", leave.LeaveClassName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
 
@@ -72,10 +72,10 @@ namespace ERP.Controllers
         }
 
         [HttpPut]
-        public JsonResult Put(Designation dep)
+        public JsonResult Put(LeaveClass leaveclass)
         {
-            //string query = @"update dbo.Designation set Designation  = '" + dep.Designation1 + @"' where DesigId = '" + dep.DesigID + @"'";
-            string query = "sp_putDesignation";
+            // string query = @"update dbo.Departments set DeptName  = '" + dep.DeptName + @"' where DeptId = '" + dep.DeptID + @"'";
+            string query = @"sp_putLeaveClass";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -85,10 +85,11 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@desid", dep.DesigID);
-                    myCommand.Parameters.AddWithValue("@desname", dep.Designation1);
+                    myCommand.Parameters.AddWithValue("@LeaveClassId", leaveclass.LeaveClassId);
+                    myCommand.Parameters.AddWithValue("@LeaveClassName", leaveclass.LeaveClassName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
+
                     myReader.Close();
                     myCon.Close();
                 }
@@ -100,8 +101,8 @@ namespace ERP.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            // string query = @"delete from dbo.Designation where DesigId  = '" + id + @"'";
-            string query = "sp_DeleteDesignation";
+            //string query = @"delete from dbo.Departments where Deptid  = '" + id + @"'";
+            string query = "sp_DeleteLeaveClass";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -111,7 +112,7 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@desid", id);
+                    myCommand.Parameters.AddWithValue("@LeaveClassId", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -121,5 +122,6 @@ namespace ERP.Controllers
 
             return new JsonResult("Deleted Successfully.");
         }
+
     }
 }

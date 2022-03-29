@@ -24,7 +24,7 @@ namespace ERP.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"select GradeId, GradeName from dbo.EmpGrade";
+            string query = "sp_GetEmpGrade";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -33,8 +33,9 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
+                    myCommand.CommandType = CommandType.StoredProcedure;
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+                    table.Load(myReader); 
 
                     myReader.Close();
                     myCon.Close();
@@ -47,8 +48,7 @@ namespace ERP.Controllers
         [HttpPost]
         public JsonResult Post(EmpGrade dep)
         {
-            string query = @"
-                       insert into dbo.EmpGrade (GradeName) values ('" + dep.GradeName + @"')";
+            string query = "sp_postEmpGrade"; // insert into dbo.EmpGrade (GradeName) values ('" + dep.GradeName + @"')";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -57,8 +57,10 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
+                    myCommand.CommandType = CommandType.StoredProcedure;
+                    myCommand.Parameters.AddWithValue("@gradename", dep.GradeName);
                     myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+                    table.Load(myReader); 
 
                     myReader.Close();
                     myCon.Close();
@@ -71,8 +73,7 @@ namespace ERP.Controllers
         [HttpPut]
         public JsonResult Put(EmpGrade dep)
         {
-            string query = @"
-                       update dbo.EmpGrade set GradeName  = '" + dep.GradeName + @"' where Gradeid = '" + dep.GradeID + @"'";
+            string query = "sp_putEmpGrade"; // @"update dbo.EmpGrade set GradeName  = '" + dep.GradeName + @"' where Gradeid = '" + dep.GradeID + @"'";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -81,6 +82,9 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
+                    myCommand.CommandType = CommandType.StoredProcedure;
+                    myCommand.Parameters.AddWithValue("@gradeid", dep.GradeID);
+                    myCommand.Parameters.AddWithValue("@gradename", dep.GradeName);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); ;
 
@@ -95,8 +99,7 @@ namespace ERP.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @"
-                       delete from dbo.EmpGrade where GradeId  = '" + id + @"'";
+            string query = "sp_deleteEmpGrade"; // @"delete from dbo.EmpGrade where GradeId  = '" + id + @"'";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -105,6 +108,8 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
+                    myCommand.CommandType = CommandType.StoredProcedure;
+                    myCommand.Parameters.AddWithValue("@gradeid", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader); ;
 

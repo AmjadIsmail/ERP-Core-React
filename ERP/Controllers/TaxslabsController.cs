@@ -1,21 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ERP.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using ERP.Models;
+
 namespace ERP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DesignationController : ControllerBase
+    public class TaxslabsController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public DesignationController(IConfiguration configuration)
+        public TaxslabsController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -23,8 +20,8 @@ namespace ERP.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            //  string query = @"select DesigId, Designation from dbo.Designation";
-            string query = "sp_getDesignation";
+           
+            string query = @"sp_gettaxslabs";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -33,7 +30,7 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.CommandType = CommandType.StoredProcedure;                    
+                    myCommand.CommandType = CommandType.StoredProcedure;
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
 
@@ -46,10 +43,10 @@ namespace ERP.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(Designation dep)
+        public JsonResult Post(TaxSlabs dep)
         {
-           // string query = @"insert into dbo.Designation (Designation) values ('" + dep.Designation1 + @"')";
-            string query = "sp_postDesignation";
+            
+            string query = "sp_postTaxSlabs";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -59,10 +56,12 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@designation1", dep.Designation1);
+                    myCommand.Parameters.AddWithValue("@amouuntfrom", dep.AmountFrom);
+                    myCommand.Parameters.AddWithValue("@amountto", dep.AmountTo);
+                    myCommand.Parameters.AddWithValue("@fixtaxamount", dep.FixTaxAmount);
+                    myCommand.Parameters.AddWithValue("@diffrencerate", dep.DiffrenceRate);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
-
                     myReader.Close();
                     myCon.Close();
                 }
@@ -72,10 +71,9 @@ namespace ERP.Controllers
         }
 
         [HttpPut]
-        public JsonResult Put(Designation dep)
+        public JsonResult Put(TaxSlabs dep)
         {
-            //string query = @"update dbo.Designation set Designation  = '" + dep.Designation1 + @"' where DesigId = '" + dep.DesigID + @"'";
-            string query = "sp_putDesignation";
+            string query = "sp_putTaxSlabs";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -85,8 +83,11 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@desid", dep.DesigID);
-                    myCommand.Parameters.AddWithValue("@desname", dep.Designation1);
+                    myCommand.Parameters.AddWithValue("@taxslabid", dep.TaxSlabId);
+                    myCommand.Parameters.AddWithValue("@amouuntfrom", dep.AmountFrom);
+                    myCommand.Parameters.AddWithValue("@amountto", dep.AmountTo);
+                    myCommand.Parameters.AddWithValue("@fixtaxamount", dep.FixTaxAmount);
+                    myCommand.Parameters.AddWithValue("@diffrencerate", dep.DiffrenceRate);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -100,8 +101,8 @@ namespace ERP.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            // string query = @"delete from dbo.Designation where DesigId  = '" + id + @"'";
-            string query = "sp_DeleteDesignation";
+           
+            string query = "sp_deleteTaxSlab";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -111,14 +112,13 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@desid", id);
+                    myCommand.Parameters.AddWithValue("@taxslabid", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
                     myCon.Close();
                 }
             }
-
             return new JsonResult("Deleted Successfully.");
         }
     }

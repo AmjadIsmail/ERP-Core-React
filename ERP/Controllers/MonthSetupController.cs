@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using ERP.Models;
+using System;
+
 namespace ERP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DesignationController : ControllerBase
+    public class MonthSetupController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public DesignationController(IConfiguration configuration)
+        public MonthSetupController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -23,8 +21,8 @@ namespace ERP.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            //  string query = @"select DesigId, Designation from dbo.Designation";
-            string query = "sp_getDesignation";
+
+            string query = @"sp_GetMonthName";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -33,7 +31,7 @@ namespace ERP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.CommandType = CommandType.StoredProcedure;                    
+                    myCommand.CommandType = CommandType.StoredProcedure;
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
 
@@ -46,11 +44,13 @@ namespace ERP.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(Designation dep)
+        public JsonResult Post(MonthSetup val)
         {
-           // string query = @"insert into dbo.Designation (Designation) values ('" + dep.Designation1 + @"')";
-            string query = "sp_postDesignation";
+           
+            string query = @"sp_PostMonthName";
             DataTable table = new DataTable();
+            DateTime dtFrom = Convert.ToDateTime(val.FromDate);
+            DateTime dtTo = Convert.ToDateTime(val.ToDate);
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -59,10 +59,12 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@designation1", dep.Designation1);
+                    myCommand.Parameters.AddWithValue("@MonthName", val.MonthName);
+                    myCommand.Parameters.AddWithValue("@FromDate", dtFrom.ToString("yyyy-MM-dd"));
+                    myCommand.Parameters.AddWithValue("@ToDate", dtTo.ToString("yyyy-MM-dd"));
+                    myCommand.Parameters.AddWithValue("@IsActive", val.IsActive);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
-
                     myReader.Close();
                     myCon.Close();
                 }
@@ -72,10 +74,12 @@ namespace ERP.Controllers
         }
 
         [HttpPut]
-        public JsonResult Put(Designation dep)
+        public JsonResult Put(MonthSetup val)
         {
-            //string query = @"update dbo.Designation set Designation  = '" + dep.Designation1 + @"' where DesigId = '" + dep.DesigID + @"'";
-            string query = "sp_putDesignation";
+
+            string query = @"sp_PutMonthName";
+            DateTime dtFrom = Convert.ToDateTime(val.FromDate);
+            DateTime dtTo = Convert.ToDateTime(val.ToDate);
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -85,8 +89,11 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@desid", dep.DesigID);
-                    myCommand.Parameters.AddWithValue("@desname", dep.Designation1);
+                    myCommand.Parameters.AddWithValue("@AutoId ", val.AutoID);
+                    myCommand.Parameters.AddWithValue("@MonthName", val.MonthName);
+                    myCommand.Parameters.AddWithValue("@FromDate", dtFrom.ToString("yyyy-MM-dd"));
+                    myCommand.Parameters.AddWithValue("@ToDate", dtTo.ToString("yyyy-MM-dd"));
+                    myCommand.Parameters.AddWithValue("@IsActive", val.IsActive);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -99,9 +106,8 @@ namespace ERP.Controllers
 
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
-        {
-            // string query = @"delete from dbo.Designation where DesigId  = '" + id + @"'";
-            string query = "sp_DeleteDesignation";
+        {           
+            string query = "sp_DeleteMonthSetup";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -111,15 +117,16 @@ namespace ERP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@desid", id);
+                    myCommand.Parameters.AddWithValue("@Autoid", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
                     myCon.Close();
                 }
             }
-
             return new JsonResult("Deleted Successfully.");
         }
+
+      
     }
 }
