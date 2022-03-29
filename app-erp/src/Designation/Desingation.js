@@ -13,7 +13,7 @@ export class Designation extends Component{
     }
 
 refreshList(){
-   //console.log('designation start')
+  
     fetch(process.env.REACT_APP_API+'designation')
     .then(response=>response.json())
     .then(data=>{
