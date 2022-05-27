@@ -96,8 +96,7 @@ namespace ERP.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @"
-                       delete from dbo.Religion where Relegion_id  = '" + id + @"'";
+            string query = @"delete from dbo.Religion where Relegion_id  = '" + id + @"'";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
@@ -113,7 +112,6 @@ namespace ERP.Controllers
                     myCon.Close();
                 }
             }
-
             return new JsonResult("Deleted Successfully.");
         }
     }
