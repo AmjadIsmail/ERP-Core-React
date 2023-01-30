@@ -34,7 +34,7 @@ export default class Monthsetup extends Component{
 
     FilterFn()
     {
-        debugger;
+        
         var IdFilter=this.state.IdFilter;
         var NameFilter = this.state.NameFilter;
         var FromDateFilter = this.state.FromDateFilter;

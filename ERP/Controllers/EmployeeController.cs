@@ -19,34 +19,19 @@ namespace ERP.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
-        public EmployeeController(IConfiguration configuration, IWebHostEnvironment env)
+        private IEmployeeRepository EmployeeRepository { get; set; }
+        public EmployeeController(IConfiguration configuration, IWebHostEnvironment env , IEmployeeRepository _employeeRepository)
         {
             _configuration = configuration;
             _env = env;
+            this.EmployeeRepository = _employeeRepository;
         }
 
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"sp_getemployees";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.CommandType = CommandType.StoredProcedure;      
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); 
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-
-            return new JsonResult(table);
+            JsonResult EmployeesList = EmployeeRepository.GetEmployeeDetails();           
+            return EmployeesList;
         }
 
         [HttpPost]

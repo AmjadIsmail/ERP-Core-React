@@ -28,7 +28,7 @@ export default class RestDays extends Component{
             DepartmentFilter:'',
             ListWithoutFilter:[],
             marginTopstate:"10px",
-            checked:[],
+            checked : [],
             empList:[]
         }      
     }     
@@ -43,7 +43,7 @@ export default class RestDays extends Component{
         var DepartmentFilter = this.state.DepartmentFilter;        
         var filterData=this.state.ListWithoutFilter.filter(
             function(el){
-                return 
+                //return 
                 el.EmployeeName.toString().trim().toLowerCase().includes(
                     NameFilter.toString().trim().toLowerCase()
                 )
@@ -118,20 +118,21 @@ export default class RestDays extends Component{
        
         fetch(process.env.REACT_APP_API+'restdays')
         .then(response=>response.json())
-        .then(data=>{ 
-            console.log(data);
+        .then(data=>{            
             this.setState({list:data,ListWithoutFilter:data})
+            document.querySelectorAll('input[type=checkbox]').forEach( el => el.checked = false );
+           
+          
         })
     }        
  
     getEmployeelist(){       
       fetch(process.env.REACT_APP_API+'employee')
       .then(response=>response.json())
-      .then(data =>{         
+      .then(data =>{ 
           var temp = [];
-        data.forEach((el)=>{          
-            console.log(el.AutoID + " " + el.EmpName + " " + el.LastName)
-            temp.push(el.EmpName + " " + el.LastName)           
+        data.forEach((el)=>{
+            temp.push(el.AutoID + "-" + el.EmployeeID + "-" +el.EmpName + " " + el.LastName)           
         })       
         this.setState({empList : temp});       
       })      
@@ -145,21 +146,20 @@ export default class RestDays extends Component{
         this.setState({
          modalTitle:"Add Rest Day",
          LeaveDetailId:0,
-         SSN:"",
+        // SSN:"",
          EmployeeName:"" ,
          ShiftDate:new Date() ,
          Department:"",
          marginTopstate:"2"        
         })
-        //this.getEmployeelist();
     }
 
     editClick(dep){  
         
         var fromdatearray = dep.ShiftDate.split("-");
-        var Todatearray = dep.ToDate.split("-");
+       // var Todatearray = dep.ToDate.split("-");
         var fdate = fromdatearray[1]+"/"+fromdatearray[0]+ "/" + fromdatearray[2];
-        var tdate = Todatearray[1]+"/"+Todatearray[0]+ "/" + Todatearray[2];
+       // var tdate = Todatearray[1]+"/"+Todatearray[0]+ "/" + Todatearray[2];
         var fd = moment(fdate).format('MM/DD/yyyy');       
         this.setState({
          modalTitle:"Edit Rest Day",
@@ -172,29 +172,37 @@ export default class RestDays extends Component{
     }
 
     createClick(){ 
+        
+        let ShiftDate = new Date();
+        ShiftDate = this.state.ShiftDate;
+        let date=ShiftDate.getDate() + "-"+ parseInt(ShiftDate.getMonth()+1) +"-"+ShiftDate.getFullYear();      
         fetch(process.env.REACT_APP_API+'restdays',{
             method:'POST',
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({
-                ShiftDate:this.state.ShiftDate,
-                SSN: this.state.SSN               
+            body:JSON.stringify({               
+                empid: this.state.checked,
+                shiftDate:date               
             })
         })
         .then(res=>res.json())
         .then((result)=>{
-            alert(result);
+            alert(result);   
+            console.log(this.state.checked);
+            this.state.checked = [];
+            console.log(this.state.checked);        
             this.refreshList();
+            this.getEmployeelist();            
+          
+           
         },(error)=>{
             alert('failed');            
         })
         
     }
-   
-    
-
+       
     deleteClick(id){
         if(window.confirm('Are you sure?'))
         {
@@ -219,16 +227,15 @@ export default class RestDays extends Component{
         const{
             list,
             modalTitle,
-            LeaveDetailId,
-            EmployeeName,
+            LeaveDetailId,            
             ShiftDate,
-            SSN,
-            marginTop,
-            checked   
+          //  SSN,
+          //  marginTop,
+          //   checked   
            } = this.state;
 
   const handleCheck = (event) => {     
-    var updatedList = this.state.checked;
+  //  var updatedList = this.state.checked;
     if (event.target.checked) {     
      this.setState({
         checked: [...this.state.checked, event.target.value]
@@ -240,10 +247,11 @@ export default class RestDays extends Component{
     }   
   };
 
+
          // Generate string of checked items
   const checkedItems = this.state.checked.length  ? this.state.checked.reduce((total, item) => {  return total + ", " + item; }) : "";
   var isChecked = (item) => this.state.checked.includes(item) ? "checked-item" : "not-checked-item";
-  const checkList = this.state.empList; //["Apple", "Banana", "Tea", "Coffee"];
+  const checkList = this.state.empList; 
   
 /** https://contactmentor.com/checkbox-list-react-js-example/ */
    
@@ -343,7 +351,7 @@ return(
                 <td>                
                 <button type="button"
                 className="btn btn-light mr-1"
-                onClick={()=>this.deleteClick(de.AutoID)}>
+                onClick={()=>this.deleteClick(de.LeaveDetailId)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
                     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                     </svg>
@@ -379,8 +387,8 @@ return(
                                         <div className="list-container">
                                         {checkList.map((item, index) => (
                                             <div key={index}>
-                                            <input value={item} type="checkbox" onChange={handleCheck} />
-                                            <span className={isChecked(item)}>{item}</span>
+                                            <input value={item.split('-')[0]} type="checkbox" onChange={handleCheck} />
+                                            <span className={isChecked(item.split('-')[0])}>{item.split('-')[2]}</span>
                                             </div>
                                         ))}
                                         </div>
@@ -395,9 +403,6 @@ return(
                             :null}                            
                             <button type="button" style={{marginLeft: '20px' ,marginTop: `${this.state.marginTopstate}px`}}  className="btn btn-primary float-start" data-bs-dismiss="modal">Close</button>
                     
-                            
-                     
-                   
                     </div>
                 </div>
         </div> 

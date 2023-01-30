@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using ERP.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERP.Controllers
 {
@@ -20,8 +21,9 @@ namespace ERP.Controllers
         {
             _configuration = configuration;
         }
-
+       
         [HttpGet]
+        [Authorize]
         public JsonResult Get()
         {
            // string query = @"select DeptId, DeptName from dbo.Departments";

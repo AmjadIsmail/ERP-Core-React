@@ -58,3 +58,13 @@ D:\GIT-ERP\ERP\obj\Debug\netcoreapp3.1\ERP.csproj.CopyComplete
 D:\GIT-ERP\ERP\obj\Debug\netcoreapp3.1\ERP.dll
 D:\GIT-ERP\ERP\obj\Debug\netcoreapp3.1\ERP.pdb
 D:\GIT-ERP\ERP\obj\Debug\netcoreapp3.1\ERP.genruntimeconfig.cache
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.Google.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+D:\GIT-ERP\ERP\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+D:\GIT-ERP\ERP\obj\Debug\netcoreapp3.1\staticwebassets\ERP.StaticWebAssets.xml
+D:\GIT-ERP\ERP\obj\Debug\netcoreapp3.1\scopedcss\bundle\ERP.styles.css

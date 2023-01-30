@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,5 +54,9 @@ namespace ERP.Models
         public string BankCode { get; set; }
         public Nullable<int> Workingdays { get; set; }
         public string Department { get; set; }
+    }
+    public interface IEmployeeRepository
+    {
+        JsonResult GetEmployeeDetails();
     }
 }

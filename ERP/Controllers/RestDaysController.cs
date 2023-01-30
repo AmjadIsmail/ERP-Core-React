@@ -44,30 +44,36 @@ namespace ERP.Controllers
         }
 
         [HttpPost]
-        public JsonResult Post(string[] name , DateTime shiftdate)
+        public JsonResult Post(RestDays restDays)
         {
             //string query = @"insert into dbo.Departments (DeptName) values ('" + dep.DeptName + @"')";
-            string query = @"sp_postRestDays";
+            string query = @"sp_SaveRestDay";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ERPAppCon");
             SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.CommandType = CommandType.StoredProcedure;
-                    myCommand.Parameters.AddWithValue("@EmployeeId", dep.EmployeeId);
-                    myCommand.Parameters.AddWithValue("@SSN", dep.SSN);
-                    myCommand.Parameters.AddWithValue("@ShiftDate", dep.ShiftDate);
-                    myCommand.Parameters.AddWithValue("@LeaveClassId", dep.LeaveClassID);
-                    myCommand.Parameters.AddWithValue("@Comments", dep.Comments);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.CommandType = CommandType.StoredProcedure;
+                        string LstEmployeeid = String.Join(",", restDays.empid.Select(p => p.ToString()).ToArray());
+                        myCommand.Parameters.AddWithValue("@ListEmployeeid", LstEmployeeid);                        
+                        myCommand.Parameters.AddWithValue("@AttnDate", restDays.shiftDate.Split('-')[2]+"-"+restDays.shiftDate.Split('-')[1].ToString().PadLeft(2,'0')+ "-" + restDays.shiftDate.Split('-')[0].PadLeft(2, '0'));
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                return new JsonResult("Error." + ex.Message.ToString());
+            }
+           
 
             return new JsonResult("Added Successfully.");
         }

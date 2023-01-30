@@ -10,4 +10,6 @@ namespace ERP.Models
        public int DeptID { get; set; }
        public string DeptName { get; set; }
     }
+
+   
 }

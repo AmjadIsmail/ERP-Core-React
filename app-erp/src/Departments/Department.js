@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import { Variables } from '../Variables';
 
+
 export class Department extends Component{
 
     constructor(props){
@@ -112,7 +113,9 @@ export class Department extends Component{
         .then(res=>res.json())
         .then((result)=>{
             alert(result);
+            window.parent.closeModal();
             this.refreshList();
+           
         },(error)=>{
             alert('failed');            
         })
@@ -133,8 +136,10 @@ export class Department extends Component{
             })
         })
         .then(res=>res.json())
-        .then((result)=>{
+        .then((result)=>{                   
              alert(result);
+             window.parent.closeModal();
+             
         this.refreshList(); 
         },(error)=>{alert('Failed');
         })
